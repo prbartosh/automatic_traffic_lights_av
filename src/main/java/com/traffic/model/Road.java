@@ -13,7 +13,7 @@ public class Road {
     public Road(Direction direction) {
         this.direction = direction;
         this.queue = new ArrayDeque<>();
-        this.lightState = lightState;
+        this.lightState = LightState.RED;
         this.totalWaited = 0;
     }
 

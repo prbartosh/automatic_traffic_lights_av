@@ -30,6 +30,18 @@ public class Intersection {
         return nsGreen && ewGreen;
     }
 
+    public void applyPhase(Phase phase) {
+        for (Direction dir : Direction.values()) {
+            if (phase.greenDirections().contains(dir)) {
+                this.roads.get(dir).setLightState(LightState.GREEN);
+            } else if (phase.isYellow()) {
+                this.roads.get(dir).setLightState(LightState.YELLOW);
+            } else {
+                this.roads.get(dir).setLightState(LightState.RED);
+            }
+        }
+    }
+
     public Map<Direction, Integer> getQueueSizes() {
         Map<Direction, Integer> sizes = new EnumMap<>(Direction.class);
         roads.forEach((dir, road) -> sizes.put(dir, road.getQueueSize()));

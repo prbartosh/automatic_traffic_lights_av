@@ -1,6 +1,8 @@
 package com.traffic.model;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class Intersection {
@@ -40,6 +42,16 @@ public class Intersection {
                 this.roads.get(dir).setLightState(LightState.RED);
             }
         }
+    }
+
+    public List<String> releaseVehicles(Phase phase) {
+        List<String> released = new ArrayList<>();
+        for (Direction dir : phase.greenDirections()) {
+            roads.get(dir)
+                    .releaseFirstVehicle()
+                    .ifPresent(vehicle -> released.add(vehicle.vehicleId()));
+        }
+        return released;
     }
 
     public Map<Direction, Integer> getQueueSizes() {

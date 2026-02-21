@@ -15,16 +15,17 @@ public class AdaptiveTrafficController implements TrafficController {
 
     @Override
     public List<String> step(Intersection intersection) {
+        if (shouldSwitchPhase(intersection)) {
+            this.currentPhase = currentPhase.next();
+            this.stepsInCurrentPhase = 0;
+        }
+
         intersection.applyPhase(this.currentPhase);
 
         List<String> leftVehicles = intersection.releaseVehicles(this.currentPhase);
 
         this.stepsInCurrentPhase++;
 
-        if (shouldSwitchPhase(intersection)) {
-            this.currentPhase = currentPhase.next();
-            this.stepsInCurrentPhase = 0;
-        }
         return leftVehicles;
     }
 
@@ -40,15 +41,19 @@ public class AdaptiveTrafficController implements TrafficController {
         if (this.currentPhase.isYellow()) {
             return true;
         }
+
+        int currentScore = calculateScore(intersection, this.currentPhase);
+        int alternativeScore = calculateScore(intersection, oppositePhase(this.currentPhase));
+        if (currentScore == 0 && alternativeScore > 0) {
+            this.currentPhase = this.currentPhase.next();
+            return true;
+        }
         if (this.stepsInCurrentPhase < MIN_PHASE_STEPS) {
             return false;
         }
         if (stepsInCurrentPhase >= MAX_PHASE_STEPS) {
             return true;
         }
-
-        int currentScore = calculateScore(intersection, this.currentPhase);
-        int alternativeScore = calculateScore(intersection, oppositePhase(this.currentPhase));
         return alternativeScore > currentScore * 1.5; // if alternative phase has more than 50% cars then switch phase
     }
 
@@ -58,5 +63,14 @@ public class AdaptiveTrafficController implements TrafficController {
                 .sum();
     }
 
+    public Phase getCurrentPhase() {
+        return this.currentPhase;
+    }
 
+    public int getMaxPhaseSteps() {
+        return MAX_PHASE_STEPS;
+    }
+    public int getMinPhaseSteps() {
+        return MIN_PHASE_STEPS;
+    }
 }

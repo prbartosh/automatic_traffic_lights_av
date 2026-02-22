@@ -1,5 +1,6 @@
 package com.traffic.simulation;
 
+import com.traffic.controller.AdaptiveTrafficController;
 import com.traffic.controller.TrafficController;
 import com.traffic.model.Intersection;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,6 +100,26 @@ class SimulationTest {
         verify(mockController).step(intersectionCaptor.capture());
 
         assertNotNull(intersectionCaptor.getValue(), "The simulation should pass a non-null Intersection to the controller");
+    }
+
+    @Test
+    void neverHasConflictingGreensOverManySteps() {
+        Simulation sim = new Simulation(new AdaptiveTrafficController());
+
+        sim.addVehicle("n1", "north", "south");
+        sim.addVehicle("s1", "south", "north");
+        sim.addVehicle("e1", "east", "west");
+        sim.addVehicle("w1", "west", "east");
+
+        Intersection intersection = sim.getIntersection();
+
+        for (int i = 0; i < 20; i++) {
+            sim.step();
+            assertFalse(
+                    intersection.hasConflictingGreens(),
+                    "Conflicting greens detected at step " + (i + 1)
+            );
+        }
     }
 
 }

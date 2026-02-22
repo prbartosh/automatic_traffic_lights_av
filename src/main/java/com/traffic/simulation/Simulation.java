@@ -35,4 +35,8 @@ public class Simulation {
     public List<List<String>> getStepResults() {
         return Collections.unmodifiableList(this.stepResults);
     }
+
+    public Intersection getIntersection() {
+        return this.intersection;
+    }
 }

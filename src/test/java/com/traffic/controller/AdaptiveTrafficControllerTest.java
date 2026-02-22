@@ -4,9 +4,11 @@ import com.traffic.model.Direction;
 import com.traffic.model.Intersection;
 import com.traffic.model.LightState;
 import com.traffic.model.Phase;
+import com.traffic.simulation.Simulation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -111,7 +113,7 @@ class AdaptiveTrafficControllerTest {
     @Test
     void noConflictingGreensOnFirstStep() {
         controller.step(intersection);
-        assertFalse(intersection.hasConflictiongGreens());
+        assertFalse(intersection.hasConflictingGreens());
     }
 
     @Test
@@ -123,7 +125,7 @@ class AdaptiveTrafficControllerTest {
 
         for (int i = 0; i < 30; i++) {
             controller.step(intersection);
-            assertFalse(intersection.hasConflictiongGreens(),
+            assertFalse(intersection.hasConflictingGreens(),
                     "Conflicting greens at step " + (i + 1));
         }
     }
@@ -218,5 +220,50 @@ class AdaptiveTrafficControllerTest {
 
         assertTrue(allLeft.contains("e1") || allLeft.contains("w1"),
                 "EW vehicles must leave when EW_GREEN is active");
+    }
+
+    @Test
+    void switchesToHigherQueuePhase() {
+        // start from NS_GREEN but E+W have many cars
+        Simulation sim = new Simulation(new AdaptiveTrafficController());
+
+        // load 5 vehicles to east
+        for (int i = 0; i < 5; i++) {
+            sim.addVehicle("e" + i, "east", "west");
+        }
+
+        // make thew steps and eventually system must give EW_GREEN
+        List<List<String>> results = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            sim.step();
+            results.add(sim.getStepResults().get(i));
+        }
+
+        // check vehicle enter from east
+        boolean anyEastLeft = results.stream()
+                .anyMatch(step -> step.stream().anyMatch(id -> id.startsWith("e")));
+
+        assertTrue(anyEastLeft, "Adaptive controller must eventually give green to East");
+    }
+
+    @Test
+    void doesNotStarveHighQueueRoad() {
+        // no road wait for more than T_max steps
+        Simulation sim = new Simulation(new AdaptiveTrafficController());
+        sim.addVehicle("w1", "west", "east");
+        sim.addVehicle("w2", "west", "east");
+
+        // after MAX_PHASE_STEPS + 2 (YELLOW) steps west must get green
+        int maxWait = controller.getMaxPhaseSteps() + 2;
+        for (int i = 0; i < maxWait; i++) {
+            sim.step();
+        }
+
+        long westLeft = sim.getStepResults().stream()
+                .flatMap(List::stream)
+                .filter(id -> id.startsWith("w"))
+                .count();
+
+        assertTrue(westLeft > 0, "West vehicles must leave within MAX_PHASE_STEPS steps");
     }
 }

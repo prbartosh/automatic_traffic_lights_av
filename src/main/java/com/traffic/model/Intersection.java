@@ -24,7 +24,7 @@ public class Intersection {
         roads.get(startRoad).addVehicle(vehicle);
     }
 
-    public boolean hasConflictiongGreens() {
+    public boolean hasConflictingGreens() {
         boolean nsGreen = roads.get(Direction.NORTH).getLightState() == LightState.GREEN
                 || roads.get(Direction.SOUTH).getLightState() == LightState.GREEN;
         boolean ewGreen = roads.get(Direction.EAST).getLightState() == LightState.GREEN

@@ -88,48 +88,48 @@ class IntersectionTest {
     // check conflicts on green
     @Test
     void noConflictWhenAllRoadsRed() {
-        assertFalse(intersection.hasConflictiongGreens());
+        assertFalse(intersection.hasConflictingGreens());
     }
 
     @Test
     void noConflictWhenOnlyNorthGreen() {
         intersection.getRoad(Direction.NORTH).setLightState(LightState.GREEN);
-        assertFalse(intersection.hasConflictiongGreens());
+        assertFalse(intersection.hasConflictingGreens());
     }
 
     @Test
     void noConflictWhenNorthAndSouthGreen() {
         intersection.getRoad(Direction.NORTH).setLightState(LightState.GREEN);
         intersection.getRoad(Direction.SOUTH).setLightState(LightState.GREEN);
-        assertFalse(intersection.hasConflictiongGreens());
+        assertFalse(intersection.hasConflictingGreens());
     }
 
     @Test
     void noConflictWhenEastAndWestGreen() {
         intersection.getRoad(Direction.EAST).setLightState(LightState.GREEN);
         intersection.getRoad(Direction.WEST).setLightState(LightState.GREEN);
-        assertFalse(intersection.hasConflictiongGreens());
+        assertFalse(intersection.hasConflictingGreens());
     }
 
     @Test
     void conflictWhenNorthAndEastGreen() {
         intersection.getRoad(Direction.NORTH).setLightState(LightState.GREEN);
         intersection.getRoad(Direction.EAST).setLightState(LightState.GREEN);
-        assertTrue(intersection.hasConflictiongGreens());
+        assertTrue(intersection.hasConflictingGreens());
     }
 
     @Test
     void conflictWhenNorthAndWestGreen() {
         intersection.getRoad(Direction.NORTH).setLightState(LightState.GREEN);
         intersection.getRoad(Direction.WEST).setLightState(LightState.GREEN);
-        assertTrue(intersection.hasConflictiongGreens());
+        assertTrue(intersection.hasConflictingGreens());
     }
 
     @Test
     void conflictWhenSouthAndEastGreen() {
         intersection.getRoad(Direction.SOUTH).setLightState(LightState.GREEN);
         intersection.getRoad(Direction.EAST).setLightState(LightState.GREEN);
-        assertTrue(intersection.hasConflictiongGreens());
+        assertTrue(intersection.hasConflictingGreens());
     }
 
     @Test
@@ -137,7 +137,7 @@ class IntersectionTest {
         for (Direction dir : Direction.values()) {
             intersection.getRoad(dir).setLightState(LightState.GREEN);
         }
-        assertTrue(intersection.hasConflictiongGreens());
+        assertTrue(intersection.hasConflictingGreens());
     }
 
     @Test
@@ -145,7 +145,7 @@ class IntersectionTest {
         // YELLOW nie jest GREEN — nie powinno liczyć się jako konflikt
         intersection.getRoad(Direction.NORTH).setLightState(LightState.YELLOW);
         intersection.getRoad(Direction.EAST).setLightState(LightState.GREEN);
-        assertFalse(intersection.hasConflictiongGreens());
+        assertFalse(intersection.hasConflictingGreens());
     }
 
     // getting queue sizes

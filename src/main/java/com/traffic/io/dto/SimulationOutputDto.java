@@ -5,6 +5,8 @@ import java.util.List;
 public class SimulationOutputDto {
     public List<StepStatusDto> stepStatuses;
 
+    public SimulationOutputDto() {}
+
     public SimulationOutputDto(List<StepStatusDto> stepStatuses) {
         this.stepStatuses = stepStatuses;
     }

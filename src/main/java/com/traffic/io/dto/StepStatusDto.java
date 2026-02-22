@@ -5,6 +5,8 @@ import java.util.List;
 public class StepStatusDto {
     public List<String> leftVehicles;
 
+    public StepStatusDto() {}
+
     public StepStatusDto(List<String> leftVehicles) {
         this.leftVehicles = leftVehicles;
     }

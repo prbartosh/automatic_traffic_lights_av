@@ -13,6 +13,11 @@ import java.util.List;
 
 public class JsonCommandParser {
     private final ObjectMapper mapper = new ObjectMapper();
+
+    public List<Command> parseFromString(String json) throws IOException {
+        SimulationInputDto dto = mapper.readValue(json, SimulationInputDto.class);
+        return dto.commands.stream().map(this::toCommand).toList();
+    }
     
     public List<Command> parse(Path inputFile) throws IOException {
         SimulationInputDto dto = mapper.readValue(inputFile.toFile(), SimulationInputDto.class);

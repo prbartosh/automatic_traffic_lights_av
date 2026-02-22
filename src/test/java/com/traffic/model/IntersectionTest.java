@@ -170,4 +170,21 @@ class IntersectionTest {
         assertEquals(0, sizes.get(Direction.EAST));
         assertEquals(0, sizes.get(Direction.SOUTH));
     }
+
+    @Test
+    void applyNsGreenSetsCorrectLights() {
+        intersection.applyPhase(Phase.NS_GREEN);
+        assertEquals(LightState.GREEN, intersection.getRoad(Direction.NORTH).getLightState());
+        assertEquals(LightState.GREEN, intersection.getRoad(Direction.SOUTH).getLightState());
+        assertEquals(LightState.RED,   intersection.getRoad(Direction.EAST).getLightState());
+        assertEquals(LightState.RED,   intersection.getRoad(Direction.WEST).getLightState());
+    }
+
+    @Test
+    void applyNsYellowSetsAllYellow() {
+        intersection.applyPhase(Phase.NS_YELLOW);
+        for (Direction dir : Direction.values()) {
+            assertEquals(LightState.YELLOW, intersection.getRoad(dir).getLightState());
+        }
+    }
 }

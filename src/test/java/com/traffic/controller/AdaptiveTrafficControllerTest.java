@@ -53,8 +53,8 @@ class AdaptiveTrafficControllerTest {
         // Step 3 i 4: v3 i v4 wyjeżdżają (po jednym per krok)
         assertEquals(1, step3.size(), "Step 3 should release exactly one vehicle");
         assertEquals(1, step4.size(), "Step 4 should release exactly one vehicle");
-        assertEquals("vehicle3", step3.get(0), "vehicle3 should leave first (FIFO)");
-        assertEquals("vehicle4", step4.get(0), "vehicle4 should leave second (FIFO)");
+        assertEquals("vehicle3", step3.getFirst(), "vehicle3 should leave first (FIFO)");
+        assertEquals("vehicle4", step4.getFirst(), "vehicle4 should leave second (FIFO)");
     }
 
     @Test
